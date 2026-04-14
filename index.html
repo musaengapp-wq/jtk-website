@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Journey to Knowledge Academy</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17973797849"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'AW-17973797849');
+    </script>
+    <meta name="description" content="Where young hearts grow in knowledge, confidence, and faith." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Nunito:wght@400;600;700;800&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Nunito', 'sans-serif'],
+              display: ['Fredoka', 'cursive'],
+              arabic: ['"Amiri"', 'serif'],
+            },
+            colors: {
+              brand: {
+                teal: '#2dd4bf', 
+                yellow: '#fde047', 
+                orange: '#fb923c', 
+                blue: '#38bdf8', 
+                green: '#4ade80', 
+                purple: '#c084fc', 
+              }
+            },
+            animation: {
+              'bounce-slow': 'bounce 3s infinite',
+              'fade-in': 'fadeIn 0.5s ease-out forwards',
+              'float': 'float 6s ease-in-out infinite',
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'slide-up': 'slideUp 0.6s ease-out forwards',
+              'glow': 'glow 2s ease-in-out infinite alternate',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0', transform: 'translateY(10px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-20px)' },
+              },
+              slideUp: {
+                '0%': { opacity: '0', transform: 'translateY(30px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              glow: {
+                'from': { 'box-shadow': '0 0 5px #fde047, 0 0 10px #fde047' },
+                'to': { 'box-shadow': '0 0 20px #fde047, 0 0 30px #fde047' }
+              }
+            },
+            boxShadow: {
+              'soft': '0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05)',
+              'premium': '0 20px 50px -12px rgba(0, 0, 0, 0.12)',
+              'brand-teal': '0 10px 20px -5px rgba(45, 212, 191, 0.3)',
+              'brand-orange': '0 10px 20px -5px rgba(251, 146, 60, 0.3)',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 100px;
+      }
+      ::-webkit-scrollbar { width: 10px; }
+      ::-webkit-scrollbar-track { background: #f8fafc; }
+      ::-webkit-scrollbar-thumb {
+        background-color: #cbd5e1;
+        border-radius: 20px;
+        border: 2px solid #f8fafc;
+      }
+      ::-webkit-scrollbar-thumb:hover { background-color: #94a3b8; }
+      
+      .text-shadow-sm { text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+      .font-arabic { font-family: 'Amiri', serif; line-height: 1.8; }
+
+      .mesh-bg {
+        background-color: #f0f9ff;
+        background-image: 
+          radial-gradient(at 0% 0%, hsla(186,100%,94%,1) 0, transparent 50%), 
+          radial-gradient(at 50% 0%, hsla(225,100%,96%,1) 0, transparent 50%), 
+          radial-gradient(at 100% 0%, hsla(339,100%,95%,1) 0, transparent 50%);
+      }
+
+      /* Advanced Dark Mode Overrides for Comprehensive Readability */
+      .dark .mesh-bg {
+        background-color: #0f172a;
+        background-image: 
+          radial-gradient(at 0% 0%, hsla(222, 47%, 11%, 1) 0, transparent 50%), 
+          radial-gradient(at 50% 0%, hsla(222, 47%, 15%, 1) 0, transparent 50%), 
+          radial-gradient(at 100% 0%, hsla(222, 47%, 11%, 1) 0, transparent 50%);
+      }
+      
+      /* Base Elements */
+      .dark .bg-white { background-color: #1e293b !important; }
+      .dark .bg-slate-50 { background-color: #0f172a !important; }
+      .dark .bg-slate-100 { background-color: #334155 !important; }
+      
+      /* Text Overrides */
+      .dark .text-slate-900, 
+      .dark .text-slate-800, 
+      .dark .text-slate-700 { color: #f1f5f9 !important; }
+      .dark .text-slate-600, 
+      .dark .text-slate-500 { color: #94a3b8 !important; }
+      .dark .text-slate-400 { color: #64748b !important; }
+      
+      /* Borders */
+      .dark .border-slate-100, 
+      .dark .border-slate-200 { border-color: #334155 !important; }
+      
+      /* Colorful Accent Backgrounds (Preserve context, ensure light text contrast) */
+      .dark .bg-teal-50 { background-color: rgba(45, 212, 191, 0.15) !important; }
+      .dark .bg-orange-50 { background-color: rgba(251, 146, 60, 0.15) !important; }
+      .dark .bg-purple-50 { background-color: rgba(192, 132, 252, 0.15) !important; }
+      .dark .bg-sky-50 { background-color: rgba(56, 189, 248, 0.15) !important; }
+      .dark .bg-green-50 { background-color: rgba(74, 222, 128, 0.15) !important; }
+      .dark .bg-yellow-50 { background-color: rgba(253, 224, 71, 0.15) !important; }
+      .dark .bg-amber-50 { background-color: rgba(251, 191, 36, 0.1) !important; }
+      
+      /* Form Readability */
+      .dark input, .dark textarea, .dark select {
+        background-color: #0f172a !important;
+        border: 1px solid #334155 !important;
+        color: #f1f5f9 !important;
+      }
+      .dark input::placeholder, .dark textarea::placeholder {
+        color: #475569 !important;
+      }
+      
+      /* Shadows */
+      .dark .shadow-soft { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3) !important; }
+      .dark .shadow-premium { box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.5) !important; }
+      
+      /* Selection colors */
+      .dark ::selection { background-color: #2dd4bf; color: #ffffff; }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-slate-50 text-slate-700 antialiased selection:bg-brand-yellow selection:text-brand-orange dark:bg-slate-900 dark:text-slate-300">
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
