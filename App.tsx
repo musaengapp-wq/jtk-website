@@ -269,7 +269,7 @@ export default function App() {
               <h2 className="text-2xl md:text-3xl font-bold text-dark mb-6">Why I started Journey to Knowledge</h2>
               <div className="space-y-4 text-slate-600 leading-relaxed">
                 <p>
-                  I'm a convert to Islam. Before I found the deen, I knew the street life &mdash; I'd seen things most people shouldn't have to see. When Allah guided me to Islam, everything changed.
+                  I'm a convert to Islam. Before I found the deen, my life was heading in a very different direction. When Allah guided me to Islam, everything changed.
                 </p>
                 <p>
                   As a non-Arab, learning Arabic was one of the hardest and most rewarding things I've ever done. I remember the struggle &mdash; sitting in classes where nothing made sense, feeling like I'd never get there. But I kept going, because I knew that understanding the Qur'an in the language it was revealed would change everything.
@@ -281,7 +281,7 @@ export default function App() {
                   I applied to the University of Madinah and kept getting told no. People told me "everyone wants to go, even we can't get in." I ignored them. I ran around getting references from every scholar who visited the UK. I put my trust in Allah, because it is Allah who gives His blessings to whoever He wills. <span className="font-arabic text-dark">الحمد لله</span> &mdash; I was accepted.
                 </p>
                 <p>
-                  The invaders of Muslim lands worked hard to strip the Arabic language from the people, because they knew that would disconnect them from Islam. Journey to Knowledge exists to rebuild that connection &mdash; one student at a time.
+                  Across the world, generations of Muslims have grown up disconnected from the Arabic language &mdash; and with it, disconnected from the Qur'an. Journey to Knowledge exists to rebuild that connection, one student at a time.
                 </p>
               </div>
             </div>
