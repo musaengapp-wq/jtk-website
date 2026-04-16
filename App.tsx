@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import {
-  BookOpen, Star, Award, Globe, Heart, Clock, Users,
-  Check, ChevronDown, ChevronUp, Menu, X, MessageCircle,
-  Phone, ArrowRight
+  BookOpen, Star, Award, Globe, Heart, Clock,
+  Check, ChevronDown, ChevronUp, Menu, X,
+  Phone, ArrowRight, Send, User, Mail
 } from 'lucide-react';
 
-const WHATSAPP_URL = "https://wa.me/447933395159";
+const WHATSAPP_NUMBER = "447933395159";
+const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 
 const NAV_LINKS = [
-  { name: 'About', href: '#about' },
+  { name: 'Our Story', href: '#story' },
   { name: 'Programmes', href: '#programmes' },
   { name: 'Pricing', href: '#pricing' },
   { name: 'FAQ', href: '#faq' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'Book a Trial', href: '#book' },
 ];
 
 const PROGRAMMES = [
@@ -46,23 +47,23 @@ const PROGRAMMES = [
 const PRICING = [
   {
     title: "Starter",
-    price: "£40",
-    frequency: "/month",
+    perHour: "£6",
+    monthly: "£24",
     sessions: "1 session per week",
     features: ["Personalised learning plan", "Progress tracking", "Free initial assessment"],
   },
   {
     title: "Standard",
-    price: "£72",
-    frequency: "/month",
+    perHour: "£6",
+    monthly: "£48",
     sessions: "2 sessions per week",
     features: ["Priority scheduling", "Monthly progress reports", "Free initial assessment"],
     highlight: true,
   },
   {
     title: "Intensive",
-    price: "£105",
-    frequency: "/month",
+    perHour: "£6",
+    monthly: "£72",
     sessions: "3 sessions per week",
     features: ["Direct tutor access", "Flexible rescheduling", "Free initial assessment"],
   },
@@ -70,12 +71,97 @@ const PRICING = [
 
 const FAQS = [
   { q: "Who is this for?", a: "Adults and families seeking structured, consistent Qur'an and Arabic tuition. Whether you're a complete beginner or looking to refine your tajweed, we tailor the programme to you." },
-  { q: "How do online classes work?", a: "Classes are conducted 1-to-1 via secure video call with your dedicated teacher. Sessions are typically 45-60 minutes." },
+  { q: "How do online classes work?", a: "Classes are conducted 1-to-1 via secure video call with your dedicated teacher. Sessions are typically 60 minutes." },
   { q: "What qualifications do the teachers have?", a: "Our teachers are native Arabic speakers from Egypt with formal ijazah (certification) in Qur'an recitation and years of teaching experience with non-Arabic speakers." },
-  { q: "Can I try before committing?", a: "Yes. Every student starts with a free assessment session where we evaluate your level and discuss your goals. No obligation." },
+  { q: "Can I try before committing?", a: "Absolutely. Every student starts with a free assessment session where we evaluate your level and discuss your goals. No obligation, no pressure." },
   { q: "Is there a specific schedule?", a: "We offer morning, afternoon, and evening slots to fit around work and family commitments. Once booked, your slot is consistent each week." },
-  { q: "How is progress tracked?", a: "You receive regular updates on your progress including areas of improvement and next objectives. We believe in transparency — you always know where you stand." },
+  { q: "I'm a complete beginner \u2014 is that OK?", a: "That's exactly who we're here for. Our founder started as a non-Arabic speaking convert and learned from scratch. We understand the journey because we've lived it." },
+  { q: "How is progress tracked?", a: "You receive regular updates on your progress including areas of improvement and next objectives. We believe in transparency \u2014 you always know where you stand." },
 ];
+
+function BookingForm() {
+  const [name, setName] = useState('');
+  const [interest, setInterest] = useState('');
+  const [times, setTimes] = useState('');
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const lines = [
+      `Assalamu alaikum! I'd like to book a free trial lesson.`,
+      ``,
+      `Name: ${name}`,
+      interest ? `Interested in: ${interest}` : '',
+      times ? `Preferred times: ${times}` : '',
+      message ? `Message: ${message}` : '',
+    ].filter(Boolean).join('\n');
+
+    const encoded = encodeURIComponent(lines);
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`, '_blank');
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4 max-w-lg mx-auto">
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1">Your name *</label>
+        <input
+          type="text"
+          required
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-slate-700"
+          placeholder="Your name"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1">What are you interested in?</label>
+        <select
+          value={interest}
+          onChange={(e) => setInterest(e.target.value)}
+          className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-slate-700 bg-white"
+        >
+          <option value="">Select a programme</option>
+          <option value="Qur'an Recitation">Qur'an Recitation</option>
+          <option value="Tajweed Studies">Tajweed Studies</option>
+          <option value="Hifz (Memorisation)">Hifz (Memorisation)</option>
+          <option value="Arabic Language">Arabic Language</option>
+          <option value="Islamic Studies">Islamic Studies</option>
+          <option value="Not sure yet">Not sure yet</option>
+        </select>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1">Preferred days / times</label>
+        <input
+          type="text"
+          value={times}
+          onChange={(e) => setTimes(e.target.value)}
+          className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-slate-700"
+          placeholder="e.g. Weekday evenings, Saturday mornings"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1">Anything else?</label>
+        <textarea
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          rows={3}
+          className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-slate-700 resize-none"
+          placeholder="Tell us about your level, goals, or any questions"
+        />
+      </div>
+      <button
+        type="submit"
+        className="w-full bg-[#25D366] text-white py-3.5 rounded-lg font-semibold text-lg hover:bg-[#20bd5a] transition-colors flex items-center justify-center gap-2"
+      >
+        <Send size={20} />
+        Book Free Trial via WhatsApp
+      </button>
+      <p className="text-center text-sm text-slate-400">
+        This opens WhatsApp with a pre-filled message. We typically respond within minutes.
+      </p>
+    </form>
+  );
+}
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -98,9 +184,9 @@ export default function App() {
                   {link.name}
                 </a>
               ))}
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
+              <a href="#book"
                 className="bg-primary text-white px-5 py-2 text-sm font-semibold hover:bg-primary-light transition-colors rounded">
-                Enquire Now
+                Start Free Trial
               </a>
             </div>
 
@@ -116,9 +202,9 @@ export default function App() {
               <a key={link.name} href={link.href} onClick={() => setIsMenuOpen(false)}
                 className="block py-2 text-slate-600 font-medium">{link.name}</a>
             ))}
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
+            <a href="#book" onClick={() => setIsMenuOpen(false)}
               className="block bg-primary text-white text-center py-3 rounded font-semibold mt-2">
-              Enquire Now
+              Start Free Trial
             </a>
           </div>
         )}
@@ -130,64 +216,84 @@ export default function App() {
           <div className="max-w-3xl">
             <p className="text-primary font-semibold text-sm tracking-wide uppercase mb-4">Online Qur'an &amp; Arabic Academy</p>
             <h1 className="text-3xl md:text-5xl font-extrabold text-dark leading-tight mb-6">
-              Personalised Qur'an and Arabic tuition for adults and families.
+              Learn the Qur'an and Arabic with someone who's walked the path.
             </h1>
             <p className="text-lg text-slate-600 mb-8 max-w-xl leading-relaxed">
-              1-to-1 online classes with experienced Egyptian teachers. Structured programmes in recitation, tajweed, memorisation, and Arabic language — tailored to your level and goals.
+              Founded by a convert who learned Arabic from scratch and studied at the University of Madinah. 1-to-1 online classes with experienced teachers, tailored to your level.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
+              <a href="#book"
                 className="inline-flex items-center justify-center bg-primary text-white px-8 py-3.5 font-semibold hover:bg-primary-light transition-colors rounded">
-                Enquire via WhatsApp <ArrowRight className="ml-2" size={18} />
+                Book Your Free Trial <ArrowRight className="ml-2" size={18} />
               </a>
-              <a href="#programmes"
+              <a href="#story"
                 className="inline-flex items-center justify-center border-2 border-slate-200 text-slate-700 px-8 py-3.5 font-semibold hover:border-primary hover:text-primary transition-colors rounded">
-                View Programmes
+                Read Our Story
               </a>
             </div>
-            <div className="flex items-center gap-6 mt-8 text-sm text-slate-500">
+            <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-8 text-sm text-slate-500">
               <span className="flex items-center gap-1.5"><Check size={16} className="text-primary" /> Free assessment</span>
-              <span className="flex items-center gap-1.5"><Check size={16} className="text-primary" /> From £40/month</span>
+              <span className="flex items-center gap-1.5"><Check size={16} className="text-primary" /> Just £6 per hour</span>
               <span className="flex items-center gap-1.5"><Check size={16} className="text-primary" /> Men, women &amp; children</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* About */}
-      <section id="about" className="py-16 md:py-24 bg-white">
+      {/* Story */}
+      <section id="story" className="py-16 md:py-24 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-12 items-start">
             <div>
-              <p className="text-primary font-semibold text-sm tracking-wide uppercase mb-3">About the Academy</p>
-              <h2 className="text-2xl md:text-3xl font-bold text-dark mb-6">Structured learning, personal guidance.</h2>
-              <p className="text-slate-600 leading-relaxed mb-4">
-                Journey to Knowledge Academy provides disciplined, personalised Qur'an and Arabic education. Every student works 1-to-1 with a dedicated teacher — no group classes, no one-size-fits-all approach.
-              </p>
-              <p className="text-slate-600 leading-relaxed mb-6">
-                Our teachers are native Arabic speakers from Egypt with formal certification (ijazah) in Qur'anic recitation and extensive experience teaching non-Arabic speakers. We prioritise consistency and depth over speed.
-              </p>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-slate-50 rounded">
-                  <div className="text-2xl font-bold text-primary">15+</div>
-                  <div className="text-xs text-slate-500 mt-1">Years Teaching</div>
-                </div>
-                <div className="text-center p-4 bg-slate-50 rounded">
-                  <div className="text-2xl font-bold text-primary">1-to-1</div>
-                  <div className="text-xs text-slate-500 mt-1">All Sessions</div>
-                </div>
-                <div className="text-center p-4 bg-slate-50 rounded">
-                  <div className="text-2xl font-bold text-primary">5</div>
-                  <div className="text-xs text-slate-500 mt-1">Programmes</div>
-                </div>
+              <p className="text-primary font-semibold text-sm tracking-wide uppercase mb-3">Our Story</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-dark mb-6">Why I started Journey to Knowledge</h2>
+              <div className="space-y-4 text-slate-600 leading-relaxed">
+                <p>
+                  I'm a convert to Islam. Before I found the deen, I knew the street life &mdash; I'd seen things most people shouldn't have to see. When Allah guided me to Islam, everything changed.
+                </p>
+                <p>
+                  As a non-Arab, learning Arabic was one of the hardest and most rewarding things I've ever done. I remember the struggle &mdash; sitting in classes where nothing made sense, feeling like I'd never get there. But I kept going, because I knew that understanding the Qur'an in the language it was revealed would change everything.
+                </p>
+                <p>
+                  And it did. I spoke to a young man once who told me his friends get bored in taraweeh prayer, but he doesn't &mdash; because he understands the Qur'an. When I reached that point myself, when I could feel the sweetness of the Qur'an in every situation and every prayer, I knew this is what I wanted to give to others.
+                </p>
+                <p>
+                  I applied to the University of Madinah and kept getting told no. People told me "everyone wants to go, even we can't get in." I ignored them. I ran around getting references from every scholar who visited the UK. I put my trust in Allah, because it is Allah who gives His blessings to whoever He wills. <span className="font-arabic text-dark">الحمد لله</span> &mdash; I was accepted.
+                </p>
+                <p>
+                  The invaders of Muslim lands worked hard to strip the Arabic language from the people, because they knew that would disconnect them from Islam. Journey to Knowledge exists to rebuild that connection &mdash; one student at a time.
+                </p>
               </div>
             </div>
-            <div className="bg-primary/5 p-8 rounded-lg border border-primary/10">
-              <p className="text-2xl font-arabic text-dark leading-loose text-right mb-4" dir="rtl">
-                اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ
-              </p>
-              <p className="text-slate-600 italic">"Read in the name of your Lord who created."</p>
-              <p className="text-sm text-slate-400 mt-2">— Surah Al-'Alaq, 96:1</p>
+            <div className="space-y-6">
+              <div className="bg-primary/5 p-8 rounded-lg border border-primary/10">
+                <p className="text-2xl font-arabic text-dark leading-loose text-right mb-4" dir="rtl">
+                  اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ
+                </p>
+                <p className="text-slate-600 italic">"Read in the name of your Lord who created."</p>
+                <p className="text-sm text-slate-400 mt-2">&mdash; Surah Al-'Alaq, 96:1</p>
+              </div>
+              <div className="bg-slate-50 p-6 rounded-lg border border-slate-100">
+                <h3 className="font-bold text-dark mb-4">What I bring to this</h3>
+                <ul className="space-y-3">
+                  <li className="flex items-start gap-3 text-sm text-slate-600">
+                    <Check size={16} className="text-primary shrink-0 mt-0.5" />
+                    <span><strong>Studied at the University of Madinah</strong> &mdash; in the city of the Prophet &#xFDFA;</span>
+                  </li>
+                  <li className="flex items-start gap-3 text-sm text-slate-600">
+                    <Check size={16} className="text-primary shrink-0 mt-0.5" />
+                    <span><strong>Convert who learned Arabic from zero</strong> &mdash; I know exactly what the journey feels like</span>
+                  </li>
+                  <li className="flex items-start gap-3 text-sm text-slate-600">
+                    <Check size={16} className="text-primary shrink-0 mt-0.5" />
+                    <span><strong>Business background</strong> &mdash; 2 years running an FBA business, deep research, large ad budgets, high-level networks</span>
+                  </li>
+                  <li className="flex items-start gap-3 text-sm text-slate-600">
+                    <Check size={16} className="text-primary shrink-0 mt-0.5" />
+                    <span><strong>Native Arabic-speaking teachers from Egypt</strong> &mdash; with formal ijazah in Qur'anic recitation</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -227,8 +333,8 @@ export default function App() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <p className="text-primary font-semibold text-sm tracking-wide uppercase mb-3">Simple Pricing</p>
-            <h2 className="text-2xl md:text-3xl font-bold text-dark mb-3">Invest in your journey</h2>
-            <p className="text-slate-500">All plans include a free assessment session. No contracts — cancel anytime.</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-dark mb-3">Just £6 per hour</h2>
+            <p className="text-slate-500">All plans include a free assessment session. No contracts &mdash; cancel anytime.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
@@ -247,9 +353,10 @@ export default function App() {
                   <h3 className="font-bold text-dark text-lg">{tier.title}</h3>
                   <p className="text-sm text-slate-500 mb-3">{tier.sessions}</p>
                   <div className="flex items-baseline justify-center gap-1">
-                    <span className="text-3xl font-extrabold text-dark">{tier.price}</span>
-                    <span className="text-slate-400 text-sm">{tier.frequency}</span>
+                    <span className="text-3xl font-extrabold text-dark">{tier.monthly}</span>
+                    <span className="text-slate-400 text-sm">/month</span>
                   </div>
+                  <p className="text-primary font-semibold text-sm mt-1">{tier.perHour}/hour</p>
                 </div>
                 <ul className="space-y-2.5 mb-6">
                   {tier.features.map((feat, i) => (
@@ -258,13 +365,13 @@ export default function App() {
                     </li>
                   ))}
                 </ul>
-                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
+                <a href="#book"
                   className={`block text-center py-2.5 rounded font-semibold text-sm transition-colors ${
                     tier.highlight
                       ? 'bg-primary text-white hover:bg-primary-light'
                       : 'border border-slate-200 text-slate-700 hover:border-primary hover:text-primary'
                   }`}>
-                  Get Started
+                  Book Free Trial
                 </a>
               </div>
             ))}
@@ -300,17 +407,31 @@ export default function App() {
         </div>
       </section>
 
-      {/* Contact / CTA */}
-      <section id="contact" className="py-16 md:py-24 bg-primary">
+      {/* Booking Form */}
+      <section id="book" className="py-16 md:py-24 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <p className="text-primary font-semibold text-sm tracking-wide uppercase mb-3">Get Started</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-dark mb-3">Book your free trial lesson</h2>
+            <p className="text-slate-500">
+              Fill in the form below and we'll message you on WhatsApp to arrange your free assessment. No commitment, no pressure.
+            </p>
+          </div>
+          <BookingForm />
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-16 md:py-24 bg-primary">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Ready to begin?</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Ready to taste the sweetness of the Qur'an?</h2>
           <p className="text-teal-100 text-lg mb-8 max-w-lg mx-auto">
-            Start with a free assessment — no obligation. We'll evaluate your level and recommend the right programme for you.
+            Start with a free assessment &mdash; no obligation. We'll evaluate your level and recommend the right programme for you.
           </p>
           <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-3 bg-white text-primary px-8 py-4 rounded font-bold text-lg hover:bg-teal-50 transition-colors">
             <Phone size={22} />
-            Enquire via WhatsApp
+            Message Us on WhatsApp
           </a>
           <p className="text-teal-200 text-sm mt-4">We typically respond within minutes</p>
         </div>
@@ -326,7 +447,7 @@ export default function App() {
                 <span className="font-bold">Journey to Knowledge</span>
               </div>
               <p className="text-sm leading-relaxed">
-                Personalised Qur'an and Arabic tuition for adults and families. Structured, consistent, and tailored to your goals.
+                Personalised Qur'an and Arabic tuition for adults and families. Founded by a convert, built on experience, driven by a mission to reconnect Muslims with the language of the Qur'an.
               </p>
             </div>
             <div>
@@ -342,8 +463,8 @@ export default function App() {
             <div>
               <h4 className="text-white font-semibold text-sm mb-4">Get in Touch</h4>
               <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm hover:text-white transition-colors">
-                <MessageCircle size={16} /> WhatsApp
+                className="inline-flex items-center gap-2 text-sm hover:text-white transition-colors mb-2">
+                <Phone size={16} /> WhatsApp
               </a>
             </div>
           </div>
