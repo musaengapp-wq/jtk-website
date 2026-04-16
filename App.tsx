@@ -306,10 +306,6 @@ export default function App() {
                   </li>
                   <li className="flex items-start gap-3 text-sm text-slate-600">
                     <Check size={16} className="text-primary shrink-0 mt-0.5" />
-                    <span><strong>Business background</strong> &mdash; 2 years running an FBA business, deep research, large ad budgets, high-level networks</span>
-                  </li>
-                  <li className="flex items-start gap-3 text-sm text-slate-600">
-                    <Check size={16} className="text-primary shrink-0 mt-0.5" />
                     <span><strong>Native Arabic-speaking teachers from Egypt</strong> &mdash; with formal ijazah in Qur'anic recitation</span>
                   </li>
                 </ul>
