@@ -101,12 +101,19 @@ function BookingForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-lg mx-auto">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4 max-w-lg mx-auto"
+      aria-label="Book a free trial lesson via WhatsApp"
+    >
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Your name *</label>
+        <label htmlFor="booking-name" className="block text-sm font-medium text-slate-700 mb-1">Your name *</label>
         <input
+          id="booking-name"
+          name="name"
           type="text"
           required
+          aria-required="true"
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-slate-700"
@@ -114,8 +121,10 @@ function BookingForm() {
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">What are you interested in?</label>
+        <label htmlFor="booking-interest" className="block text-sm font-medium text-slate-700 mb-1">What are you interested in?</label>
         <select
+          id="booking-interest"
+          name="interest"
           value={interest}
           onChange={(e) => setInterest(e.target.value)}
           className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-slate-700 bg-white"
@@ -130,8 +139,10 @@ function BookingForm() {
         </select>
       </div>
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Preferred days / times</label>
+        <label htmlFor="booking-times" className="block text-sm font-medium text-slate-700 mb-1">Preferred days / times</label>
         <input
+          id="booking-times"
+          name="times"
           type="text"
           value={times}
           onChange={(e) => setTimes(e.target.value)}
@@ -140,8 +151,10 @@ function BookingForm() {
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Anything else?</label>
+        <label htmlFor="booking-message" className="block text-sm font-medium text-slate-700 mb-1">Anything else?</label>
         <textarea
+          id="booking-message"
+          name="message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           rows={3}
@@ -151,9 +164,10 @@ function BookingForm() {
       </div>
       <button
         type="submit"
+        aria-label="Submit booking form and open WhatsApp with pre-filled message"
         className="w-full bg-[#25D366] text-white py-3.5 rounded-lg font-semibold text-lg hover:bg-[#20bd5a] transition-colors flex items-center justify-center gap-2"
       >
-        <Send size={20} />
+        <Send size={20} aria-hidden="true" />
         Book Free Trial via WhatsApp
       </button>
       <p className="text-center text-sm text-slate-400">
@@ -190,14 +204,20 @@ export default function App() {
               </a>
             </div>
 
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden p-2 text-slate-600">
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden p-2 text-slate-600"
+              aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-menu"
+            >
+              {isMenuOpen ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
             </button>
           </div>
         </div>
 
         {isMenuOpen && (
-          <div className="md:hidden bg-white border-t border-slate-100 px-4 py-3 space-y-2">
+          <div id="mobile-menu" role="menu" aria-label="Mobile navigation" className="md:hidden bg-white border-t border-slate-100 px-4 py-3 space-y-2">
             {NAV_LINKS.map(link => (
               <a key={link.name} href={link.href} onClick={() => setIsMenuOpen(false)}
                 className="block py-2 text-slate-600 font-medium">{link.name}</a>
@@ -386,23 +406,38 @@ export default function App() {
             <p className="text-primary font-semibold text-sm tracking-wide uppercase mb-3">Common Questions</p>
             <h2 className="text-2xl md:text-3xl font-bold text-dark">Frequently Asked Questions</h2>
           </div>
-          <div className="space-y-3">
-            {FAQS.map((faq, idx) => (
-              <div key={idx} className="bg-white rounded-lg border border-slate-100 overflow-hidden">
-                <button
-                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full flex items-center justify-between p-5 text-left"
-                >
-                  <span className="font-semibold text-dark">{faq.q}</span>
-                  {openFaq === idx ? <ChevronUp size={18} className="text-primary shrink-0" /> : <ChevronDown size={18} className="text-slate-400 shrink-0" />}
-                </button>
-                {openFaq === idx && (
-                  <div className="px-5 pb-5 text-slate-600 text-sm leading-relaxed border-t border-slate-50 pt-3">
-                    {faq.a}
-                  </div>
-                )}
-              </div>
-            ))}
+          <div className="space-y-3" role="region" aria-label="Frequently asked questions">
+            {FAQS.map((faq, idx) => {
+              const isOpen = openFaq === idx;
+              const buttonId = `faq-button-${idx}`;
+              const panelId = `faq-panel-${idx}`;
+              return (
+                <div key={idx} className="bg-white rounded-lg border border-slate-100 overflow-hidden">
+                  <button
+                    id={buttonId}
+                    onClick={() => setOpenFaq(isOpen ? null : idx)}
+                    aria-expanded={isOpen}
+                    aria-controls={panelId}
+                    className="w-full flex items-center justify-between p-5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                  >
+                    <span className="font-semibold text-dark">{faq.q}</span>
+                    {isOpen
+                      ? <ChevronUp size={18} className="text-primary shrink-0" aria-hidden="true" />
+                      : <ChevronDown size={18} className="text-slate-400 shrink-0" aria-hidden="true" />}
+                  </button>
+                  {isOpen && (
+                    <div
+                      id={panelId}
+                      role="region"
+                      aria-labelledby={buttonId}
+                      className="px-5 pb-5 text-slate-600 text-sm leading-relaxed border-t border-slate-50 pt-3"
+                    >
+                      {faq.a}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -476,9 +511,10 @@ export default function App() {
 
       {/* Floating WhatsApp */}
       <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-40 bg-[#25D366] text-white p-3.5 rounded-full shadow-lg hover:scale-110 transition-transform"
-        title="Chat on WhatsApp">
-        <svg viewBox="0 0 24 24" className="w-7 h-7 fill-current">
+        className="fixed bottom-6 right-6 z-40 bg-[#25D366] text-white p-3.5 rounded-full shadow-lg hover:scale-110 transition-transform focus:outline-none focus-visible:ring-4 focus-visible:ring-[#25D366]/40"
+        title="Chat on WhatsApp"
+        aria-label="Chat with Journey to Knowledge Academy on WhatsApp">
+        <svg viewBox="0 0 24 24" className="w-7 h-7 fill-current" role="img" aria-hidden="true" focusable="false">
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.414 0 .018 5.396.015 12.03c0 2.12.547 4.189 1.586 6.06L0 24l6.117-1.604a11.774 11.774 0 005.928 1.603h.005c6.634 0 12.032-5.397 12.035-12.032.003-3.218-1.248-6.242-3.523-8.517z"/>
         </svg>
       </a>
