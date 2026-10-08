@@ -96,8 +96,9 @@ const FAQS = [
   { q: 'How much are lessons?', a: 'Paid tuition starts at £30/month for one hour of tuition per week, delivered as two 30-minute one-to-one lessons. All 30-minute lesson plans are equivalent to £7.50 per teaching hour. Other weekly schedules and 60-minute lessons are shown in the pricing section. Monthly payment is made in advance if you decide to enrol.' },
   { q: 'How do online lessons work?', a: 'You meet your teacher one-to-one by video call. Lessons last 30 or 60 minutes, depending on your chosen plan.' },
   { q: 'Can my children share a lesson slot?', a: 'A 60-minute slot may be divided between family members by arrangement. The teaching time is shared within that hour. Tell us about the learners so we can discuss a suitable setup.' },
-  { q: 'What qualifications do the teachers have?', a: 'Our teachers are native Arabic speakers from Egypt with formal ijazah in Qur’an recitation. The programme is overseen by a director who studied at the University of Madinah.' },
-  { q: 'When are lessons available?', a: 'Morning, afternoon and evening slots are available, subject to teacher availability. Tell us your preferred days, times and time zone when you enquire.' },
+  { q: 'Who will teach me?', a: 'Lessons are taught by a native Arabic-speaking teacher from Egypt, and the programme is overseen by a director who studied at the University of Madinah.' },
+  { q: 'Do you have a female teacher?', a: 'Yes. Sisters, women and children can learn with a female teacher. Let us know your preference when you request your trial lesson.' },
+  { q: 'When are lessons available?', a: 'Lesson times are arranged with you, subject to teacher availability. Tell us your preferred days, times and time zone when you enquire.' },
   { q: 'What if I do not know which programme to choose?', a: 'Select “Not sure yet” in the form. We can discuss the options during your trial lesson.' },
   { q: 'How will I know how learning is progressing?', a: 'We provide progress updates and discuss what to work on next.' },
   { q: 'Do you offer more than four lessons a week?', a: 'Ask us about five days a week or a custom family arrangement. We’ll discuss a suitable plan and available times.' },
@@ -354,6 +355,7 @@ export default function App() {
               <span className="flex items-center gap-1.5"><Check size={16} className="text-primary" /> Free trial lesson</span>
               <span className="flex items-center gap-1.5"><Check size={16} className="text-primary" /> 30 or 60-minute lessons</span>
               <span className="flex items-center gap-1.5"><Check size={16} className="text-primary" /> For children, adults &amp; families</span>
+              <span className="flex items-center gap-1.5"><Check size={16} className="text-primary" /> Female teacher available</span>
             </div>
           </div>
         </div>
@@ -506,7 +508,7 @@ export default function App() {
               <div className="space-y-4 text-slate-600 leading-relaxed">
                 <p>Musa came to Islam and studied Arabic in Madinah. He knows what it is like to begin learning the language from scratch.</p>
                 <p>In this short video, he shares why he started JTK: to give learners a real teacher, one-to-one attention and a clear path from their current level.</p>
-                <p>Our teachers support children and adults with Qur'an, Nooraniyah and Arabic. A free trial lesson helps us understand your goals and find the right starting point.</p>
+                <p>We support children and adults with Qur'an, Nooraniyah and Arabic. A free trial lesson helps us understand your goals and find the right starting point.</p>
               </div>
               <a href="#book" onClick={() => trackCtaClick('story', 'Request a free trial lesson')}
                 className="inline-flex items-center justify-center mt-7 bg-primary text-white px-6 py-3 font-semibold hover:bg-primary-light transition-colors rounded">
@@ -543,7 +545,7 @@ export default function App() {
                   </li>
                   <li className="flex items-start gap-3 text-sm text-slate-600">
                     <Check size={16} className="text-primary shrink-0 mt-0.5" />
-                    <span><strong>Native Arabic-speaking teachers from Egypt</strong> with formal ijazah in Qur'anic recitation</span>
+                    <span><strong>Native Arabic-speaking teacher from Egypt,</strong> with a female teacher available for sisters and children</span>
                   </li>
                 </ul>
               </div>
