@@ -109,6 +109,7 @@ function BookingForm({ selectedPlan, onPlanChange }: { selectedPlan: string; onP
   const [name, setName] = useState('');
   const [interest, setInterest] = useState('');
   const [learner, setLearner] = useState('');
+  const [level, setLevel] = useState('');
   const [times, setTimes] = useState('');
   const [message, setMessage] = useState('');
 
@@ -123,6 +124,7 @@ function BookingForm({ selectedPlan, onPlanChange }: { selectedPlan: string; onP
       `Name: ${name}`,
       learner ? `Lessons for: ${learner}` : '',
       interest ? `Interested in: ${interest}` : '',
+      `Level: ${level}`,
       `Preferred lesson option: ${planLabel}`,
       times ? `Preferred times: ${times}` : '',
       message ? `Message: ${message}` : '',
@@ -186,6 +188,24 @@ function BookingForm({ selectedPlan, onPlanChange }: { selectedPlan: string; onP
           <option value="Arabic Language">Arabic Language</option>
           <option value="Islamic Studies">Islamic Studies</option>
           <option value="Not sure yet">Not sure yet</option>
+        </select>
+      </div>
+      <div>
+        <label htmlFor="booking-level" className="block text-sm font-medium text-slate-700 mb-1">{learner === 'My child' ? "Your child's current level" : 'Current level'} *</label>
+        <select
+          id="booking-level"
+          name="level"
+          required
+          aria-required="true"
+          value={level}
+          onChange={e => setLevel(e.target.value)}
+          className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-slate-700 bg-white"
+        >
+          <option value="" disabled>Choose a level</option>
+          <option>Complete beginner (I don't know the letters yet)</option>
+          <option>I know the letters but read slowly</option>
+          <option>I can read the Qur'an and want to improve (tajweed)</option>
+          <option>I know some Arabic and want to go further</option>
         </select>
       </div>
       <div>

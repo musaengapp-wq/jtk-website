@@ -56,7 +56,7 @@ The booking form (`BookingForm` component in `App.tsx`) never submits to a serve
 3. `window.open(..., '_blank')` is called, which opens WhatsApp (app or web) with the recipient and message pre-filled.
 4. The prospect clicks **Send** on their end — that's the actual enquiry.
 
-The business owner receives the message in WhatsApp and replies to book the free assessment lesson.
+The business owner receives the message in WhatsApp and replies to book the free trial lesson.
 
 The WhatsApp number (`447933395159`) is hard-coded as `WHATSAPP_NUMBER` at the top of `App.tsx`. The floating bottom-right WhatsApp button and the final-CTA button both open the same `wa.me` URL *without* a pre-filled message.
 
