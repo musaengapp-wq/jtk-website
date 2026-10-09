@@ -675,7 +675,7 @@ export default function App() {
 
       {/* Floating WhatsApp */}
       <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Assalamu alaikum, I'd like to book a free trial lesson.")}`} target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsAppClick('floating_button')}
-        className="block fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 bg-[#25D366] text-white p-2.5 sm:p-3.5 rounded-full shadow-lg hover:scale-110 transition-transform focus:outline-none focus-visible:ring-4 focus-visible:ring-[#25D366]/40"
+        className="block fixed top-2 right-16 md:top-auto md:bottom-6 md:right-6 z-[60] md:z-40 bg-[#25D366] text-white p-2.5 md:p-3.5 rounded-full shadow-lg hover:scale-110 transition-transform focus:outline-none focus-visible:ring-4 focus-visible:ring-[#25D366]/40"
         title="Chat on WhatsApp"
         aria-label="Chat with Journey to Knowledge Academy on WhatsApp">
         <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 fill-current" role="img" aria-hidden="true" focusable="false">
