@@ -242,7 +242,7 @@ export const PAGES: Record<LandingKey, LandingPage> = {
     sub: "Patient lessons with a native Arabic-speaking teacher, from the first letters (Noorani Qaida) to reading the Qur'an. Short 30-minute lessons that fit around school.",
     ticks: ['Free 30-minute trial', 'Female teacher available', '2 lessons a week from £32 per 4 weeks'],
     button: 'Book a free trial for my child',
-    message: "Assalamu alaikum, I'd like to book a free trial Qur'an lesson for my child. Child's age: ",
+    message: "Assalamu alaikum, I'd like to book a free trial Qur'an lesson for my child.\nChild's age: ",
     defaultLearner: 'My child',
     childSafety: true,
     sections: [

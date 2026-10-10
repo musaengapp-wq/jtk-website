@@ -57,7 +57,7 @@ Page order (home and landing pages): Nav → Hero → page-specific section(s) �
 
 ## WhatsApp and tracking
 
-- Every WhatsApp link is built by `whatsappUrl()` in `whatsapp.ts`: `https://wa.me/447933395159?text=<page message>`, plus a last line `Found you on: Google | TikTok | Facebook/Instagram` when the visit came from an ad click ID or `utm_source`. Click IDs and personal data never go in the message.
+- Every WhatsApp link is built by `whatsappUrl()` in `whatsapp.ts`: `https://wa.me/447933395159?text=<page message>`, plus a line `Found you on: Google | TikTok | Facebook/Instagram` when the visit came from an ad click ID or `utm_source`. It is the last line, except when the message ends with an open question line (`Label: `, e.g. kids' `Child's age: `): then it goes just above it so the cursor lands on the question. Click IDs and personal data never go in the message.
 - Every WhatsApp link is a real `<a href>` with `onClick → trackWhatsAppClick("<page>:<position>")`, e.g. `kids:hero`.
 - The Google Ads tag (`AW-17973797849`, conversion `AW-17973797849/V8QgCJOcm_4bENnHyfpC`) loads **only** on `jtkacademy.com` / `www.jtkacademy.com`, so previews and localhost never record conversions. No cookie banner, Consent Mode, GA4, TikTok or Meta pixel yet.
 - `[CONFIRM-…]` markers (open decisions for Musa) are highlighted on previews and hidden on the live site.

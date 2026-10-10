@@ -136,6 +136,41 @@ for (const [search, expected] of [
   assert.equal(text, "Assalamu alaikum, I'd like to book a free trial lesson.\nFound you on: TikTok");
 }
 
+// 5b. Every page's button message: the source goes above a last open question ("Child's age: ")
+//     so the cursor lands there; otherwise it is the last line.
+{
+  const flags = load('flags.ts', {}, {});
+  const content = load('content.ts', {}, { './flags': flags });
+  const pages = ['home', ...Object.keys(content.PAGES)];
+  assert(pages.includes('kids'), 'kids page found');
+  for (const page of pages) {
+    const message = content.pageMessage(page);
+    for (const search of ['', '?gclid=1', '?ttclid=1', '?fbclid=1']) {
+      const s = setup(search);
+      const source = s.whatsapp.getVisitSource();
+      const text = new URL(s.whatsapp.whatsappUrl(message)).searchParams.get('text');
+      const lines = text.split('\n');
+      if (!source) {
+        assert.equal(text, message, `${page}: no source line without a source`);
+      } else if (/: $/.test(lines[lines.length - 1])) {
+        assert.equal(lines[lines.length - 2], `Found you on: ${source}`, `${page}: source just above the question`);
+        assert.equal(lines.filter((l) => l.startsWith('Found you on')).length, 1, `${page}: one source line`);
+      } else {
+        assert.equal(text, `${message}\nFound you on: ${source}`, `${page}: source is the last line`);
+      }
+    }
+  }
+  const kids = new URL(setup('?gclid=1').whatsapp.whatsappUrl(content.pageMessage('kids'))).searchParams.get('text');
+  assert.equal(kids, "Assalamu alaikum, I'd like to book a free trial Qur'an lesson for my child.\nFound you on: Google\nChild's age: ");
+  assert.equal(content.pageMessage('kids'), "Assalamu alaikum, I'd like to book a free trial Qur'an lesson for my child.\nChild's age: ");
+}
+
+// 5c. A typed form message ending in a colon never moves the source line.
+{
+  const { text } = sendAndRead('?gclid=1', { ...base, message: 'Two questions\nWhen can we start:' });
+  assert(text.endsWith('Message: Two questions\nWhen can we start:\nFound you on: Google'), 'source stays last on the form');
+}
+
 // 6. Storage blocked (private browsing): still works, nothing thrown.
 {
   const s = setup('?fbclid=1');
@@ -144,4 +179,4 @@ for (const [search, expected] of [
   assert.equal(s.whatsapp.initVisitSource(), 'Facebook/Instagram');
 }
 
-console.log('PASS: form message format, child age, level, source line, special characters and one conversion per submit. No messages sent.');
+console.log('PASS: form message format, child age, level, source line (above a last open question on every page), special characters and one conversion per submit. No messages sent.');

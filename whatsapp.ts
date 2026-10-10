@@ -37,9 +37,20 @@ export function getVisitSource(): VisitSource | null {
   return visitSource;
 }
 
-/** Adds the "Found you on" line when a source was detected. Never adds click IDs or personal data. */
+/** A last line like "Child's age: " that the visitor fills in after WhatsApp opens. */
+const OPEN_QUESTION = /\n([^\n:]+: )$/;
+
+/**
+ * Adds the "Found you on" line when a source was detected. It goes last, or just above a last
+ * open question (e.g. "Child's age: ") so the cursor lands on the question.
+ * Never adds click IDs or personal data.
+ */
 export function withSourceLine(message: string, source: VisitSource | null = visitSource): string {
-  return source ? `${message}\nFound you on: ${source}` : message;
+  if (!source) return message;
+  const line = `Found you on: ${source}`;
+  const question = message.match(OPEN_QUESTION);
+  if (!question) return `${message}\n${line}`;
+  return `${message.slice(0, question.index)}\n${line}\n${question[1]}`;
 }
 
 /** Builds every WhatsApp link on the site. */
