@@ -1,27 +1,147 @@
+// Checks the WhatsApp enquiry message without sending anything: window.open and tracking are stubs.
+// Run: node verify-enquiry.cjs
 const fs = require('node:fs');
+const path = require('node:path');
 const vm = require('node:vm');
 const assert = require('node:assert/strict');
 const ts = require('typescript');
-const source = fs.readFileSync('App.tsx', 'utf8');
-const pricing = source.slice(source.indexOf('const PRICING ='), source.indexOf('const FAQS ='));
-const handler = source.slice(source.indexOf('  const handleSubmit ='), source.indexOf('\n  return (', source.indexOf('  const handleSubmit =')));
-for (const [id, expected, learner, level] of [
-  ['30-2', 'Two 30-minute lessons each week — £30/month', 'Myself', "Complete beginner (I don't know the letters yet)"],
-  ['60-4', 'Four 60-minute lessons each week — £95/month', 'My child', 'I know the letters but read slowly'],
-  ['', 'Not sure yet', 'Myself', 'I know some Arabic and want to go further'],
-]) {
-  let opened, tracked = 0, prevented = false;
-  const context = { name: 'Test & name', interest: 'Arabic-reading foundations (Nooraniyah)', learner, level, times: '18:00 UK', message: 'Question? A+B & C', selectedPlan: id, WHATSAPP_NUMBER: '447933395159', trackWhatsAppClick: () => tracked++, window: {open: (...args) => opened = args}, event: {preventDefault: () => prevented = true}};
-  vm.runInNewContext(ts.transpileModule(pricing + handler + '\nhandleSubmit(event);', {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText, context);
-  const url = new URL(opened[0]);
-  assert.equal(url.origin + url.pathname, 'https://wa.me/447933395159');
-  assert.equal(opened[2], 'noopener,noreferrer');
-  assert(url.searchParams.get('text').includes('Preferred lesson option: ' + expected));
-  assert(url.searchParams.get('text').includes('Name: Test & name'));
-  assert(url.searchParams.get('text').includes('Lessons for: ' + learner));
-  assert(url.searchParams.get('text').includes('Interested in: Arabic-reading foundations (Nooraniyah)\nLevel: ' + level));
-  assert(!url.searchParams.get('text').toLowerCase().includes('assessment'));
-  assert(url.searchParams.get('text').includes('Question? A+B & C'));
-  assert.equal(tracked, 1); assert(prevented);
+
+function load(file, context, stubs) {
+  const source = fs.readFileSync(path.join(__dirname, file), 'utf8');
+  const js = ts.transpileModule(source, {
+    compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
+  }).outputText;
+  const module = { exports: {} };
+  vm.runInNewContext(js, {
+    ...context,
+    module,
+    exports: module.exports,
+    require: (name) => {
+      if (!(name in stubs)) throw new Error(`Unexpected import ${name} in ${file}`);
+      return stubs[name];
+    },
+  });
+  return module.exports;
 }
-console.log('PASS: adult, parent and undecided enquiries preserve plan, learner, level and special characters; no messages sent.');
+
+function setup(search) {
+  const store = new Map();
+  const opened = [];
+  const tracked = [];
+  const window = {
+    location: { search },
+    sessionStorage: { getItem: (k) => store.get(k) ?? null, setItem: (k, v) => store.set(k, String(v)) },
+    open: (...args) => opened.push(args),
+  };
+  const context = { window, URLSearchParams, encodeURIComponent };
+  const whatsapp = load('whatsapp.ts', context, {});
+  const tracking = { trackWhatsAppClick: (location) => tracked.push(location) };
+  const enquiry = load('enquiry.ts', context, { './whatsapp': whatsapp, './tracking': tracking });
+  whatsapp.initVisitSource();
+  return { whatsapp, enquiry, opened, tracked, window, store };
+}
+
+const base = {
+  name: 'Test & name',
+  learner: 'Myself',
+  childAge: '',
+  interest: 'Reading Arabic from the start (Noorani Qaida)',
+  level: "Complete beginner (I don't know the letters yet)",
+  times: '',
+  message: '',
+};
+
+function sendAndRead(search, enquiry, page = 'home') {
+  const s = setup(search);
+  const returned = s.enquiry.sendEnquiry(enquiry, page);
+  assert.equal(s.opened.length, 1, 'WhatsApp opened once');
+  assert.equal(s.tracked.length, 1, 'trackWhatsAppClick called once');
+  assert.equal(s.tracked[0], `${page}:form_submit`);
+  const [href, target, features] = s.opened[0];
+  assert.equal(href, returned, 'fallback link matches the opened link');
+  assert.equal(target, '_blank');
+  assert.equal(features, 'noopener,noreferrer');
+  const url = new URL(href);
+  assert.equal(url.origin + url.pathname, 'https://wa.me/447933395159');
+  return { text: url.searchParams.get('text'), s };
+}
+
+// 1. Adult, no optional fields, no source.
+{
+  const { text } = sendAndRead('', base);
+  assert.equal(text, [
+    "Assalamu alaikum! I'd like to book a free trial lesson.",
+    '',
+    'Name: Test & name',
+    'Lessons for: Myself',
+    'Interested in: Reading Arabic from the start (Noorani Qaida)',
+    "Level: Complete beginner (I don't know the letters yet)",
+  ].join('\n'));
+  assert(!/plan|lesson option/i.test(text), 'no plan line');
+  assert(!text.includes("Child's age"), 'no child age when not given');
+  assert(!text.includes('Found you on'), 'no source line without a source');
+}
+
+// 2. Parent from a Google ad, with every field and special characters.
+{
+  const { text } = sendAndRead('?gclid=SECRET123&utm_campaign=x', {
+    ...base,
+    learner: 'My child',
+    childAge: '7',
+    interest: '',
+    level: 'I know the letters but read slowly',
+    times: 'Sundays & after 4pm',
+    message: 'Question? A+B & C #1 100% "quotes" é ع',
+  }, 'kids');
+  assert.equal(text, [
+    "Assalamu alaikum! I'd like to book a free trial lesson.",
+    '',
+    'Name: Test & name',
+    'Lessons for: My child',
+    "Child's age: 7",
+    'Interested in: Not sure yet',
+    'Level: I know the letters but read slowly',
+    'Preferred times: Sundays & after 4pm',
+    'Message: Question? A+B & C #1 100% "quotes" é ع',
+    'Found you on: Google',
+  ].join('\n'));
+  assert(!text.includes('SECRET123') && !text.includes('gclid'), 'click IDs never go in the message');
+}
+
+// 3. Child's age typed but then switched to "Myself": age is left out.
+{
+  const { text } = sendAndRead('', { ...base, childAge: '9' });
+  assert(!text.includes("Child's age"));
+}
+
+// 4. Every source rule, and the source surviving to the next page (sessionStorage).
+for (const [search, expected] of [
+  ['?gbraid=1', 'Google'], ['?wbraid=1', 'Google'], ['?utm_source=Google', 'Google'],
+  ['?ttclid=1', 'TikTok'], ['?utm_source=tiktok', 'TikTok'],
+  ['?fbclid=1', 'Facebook/Instagram'], ['?utm_source=facebook', 'Facebook/Instagram'], ['?utm_source=instagram', 'Facebook/Instagram'],
+  ['?utm_source=newsletter', null], ['', null],
+]) {
+  const { s } = sendAndRead(search, base);
+  assert.equal(s.whatsapp.getVisitSource(), expected, search);
+  if (expected) {
+    s.window.location.search = '';
+    assert.equal(s.whatsapp.initVisitSource(), expected, `${search} remembered on the next page`);
+  }
+}
+
+// 5. Page buttons: the page message plus the source as the last line.
+{
+  const s = setup('?utm_source=tiktok');
+  const text = new URL(s.whatsapp.whatsappUrl("Assalamu alaikum, I'd like to book a free trial lesson.")).searchParams.get('text');
+  assert.equal(text, "Assalamu alaikum, I'd like to book a free trial lesson.\nFound you on: TikTok");
+}
+
+// 6. Storage blocked (private browsing): still works, nothing thrown.
+{
+  const s = setup('?fbclid=1');
+  s.window.sessionStorage.setItem = () => { throw new Error('blocked'); };
+  s.window.sessionStorage.getItem = () => { throw new Error('blocked'); };
+  assert.equal(s.whatsapp.initVisitSource(), 'Facebook/Instagram');
+}
+
+console.log('PASS: form message format, child age, level, source line, special characters and one conversion per submit. No messages sent.');
