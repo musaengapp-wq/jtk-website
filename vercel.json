@@ -1,0 +1,25 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/quran-lessons/uk-families", "destination": "/quran-lessons/kids/index.html" }
+  ],
+  "redirects": [
+    { "source": "/arabic", "destination": "/learn-arabic-online", "permanent": false },
+    { "source": "/arabic/lessons", "destination": "/learn-arabic-online", "permanent": false },
+    { "source": "/arabic-lessons", "destination": "/learn-arabic-online", "permanent": false },
+    { "source": "/reverts", "destination": "/reverts-and-older-learners", "permanent": false },
+    { "source": "/new-muslims", "destination": "/reverts-and-older-learners", "permanent": false },
+    { "source": "/older-learners", "destination": "/reverts-and-older-learners", "permanent": false },
+    { "source": "/kids", "destination": "/quran-lessons/kids", "permanent": false },
+    { "source": "/children", "destination": "/quran-lessons/kids", "permanent": false },
+    { "source": "/quran-lessons", "destination": "/quran-lessons/adults", "permanent": false },
+    { "source": "/prices", "destination": "/#pricing", "permanent": false },
+    { "source": "/pricing", "destination": "/#pricing", "permanent": false },
+    { "source": "/free-trial", "destination": "/#book", "permanent": false },
+    { "source": "/trial", "destination": "/#book", "permanent": false },
+    { "source": "/how-it-works", "destination": "/#how-it-works", "permanent": false },
+    { "source": "/what-we-teach", "destination": "/#programmes", "permanent": false }
+  ]
+}
