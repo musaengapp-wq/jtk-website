@@ -392,7 +392,7 @@ function Pricing() {
 
 function Story() {
   return (
-    <section id="story" className="scroll-mt-16 py-14 md:py-20 bg-white">
+    <section id="story" className="py-14 md:py-20 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="grid md:grid-cols-2 gap-10 lg:gap-14 items-start">
           <div>
@@ -657,10 +657,21 @@ export default function App({ page }: { page: PageKey }) {
     const targetId = window.location.hash.slice(1);
     if (!targetId) return;
 
-    const frame = window.requestAnimationFrame(() => {
-      document.getElementById(targetId)?.scrollIntoView();
-    });
-    return () => window.cancelAnimationFrame(frame);
+    let userScrolled = false;
+    const markScrolled = () => { userScrolled = true; };
+    const jump = () => {
+      if (!userScrolled) document.getElementById(targetId)?.scrollIntoView({ behavior: 'instant' as ScrollBehavior });
+    };
+    window.addEventListener('wheel', markScrolled, { once: true, passive: true });
+    window.addEventListener('touchstart', markScrolled, { once: true, passive: true });
+    const frame = window.requestAnimationFrame(jump);
+    // Web fonts arriving can shift the page, so jump again once they've loaded (e.g. links to /#pricing from ads).
+    document.fonts?.ready.then(jump);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener('wheel', markScrolled);
+      window.removeEventListener('touchstart', markScrolled);
+    };
   }, []);
 
   // Landing pages have every section, so in-page anchors work; other pages link back to home.
