@@ -3,7 +3,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/quran-lessons/uk-families", "destination": "/quran-lessons/kids/index.html" }
+    { "source": "/quran-lessons/uk-families", "destination": "/quran-lessons/kids" }
   ],
   "redirects": [
     { "source": "/arabic", "destination": "/learn-arabic-online", "permanent": false },
